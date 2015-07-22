@@ -1,40 +1,57 @@
 (function(document, window, $, moment) {
   $(document).ready(function() {
-    var currentDate = moment();
+    var cache = {};
 
     var calendar = $('#calendar');
-    calendar.fullCalendar({
-      header: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'month,basicWeek,basicDay'
-      },
-      defaultDate: currentDate,
-      editable: true,
-      eventLimit: true,
-      eventClick: function(eventObj) {
-        console.log(event);
-        document.location = window.location + eventObj._id;
-      }
-    });
 
-    $.getJSON('json', {
-      year: currentDate.format('YYYY'),
-      month: currentDate.format('MM')
-    }).done(function(fullCalendarData) {
-      var mappedCollection = [];
-      for (var i = 0; i < fullCalendarData.length; i++) {
-        mappedCollection.push({
-          title: fullCalendarData[i].fields.title,
-          end: fullCalendarData[i].fields.end_time,
-          start: fullCalendarData[i].fields.start_time,
-          id : fullCalendarData[i].pk
+    function mapCalendarData(data) {
+      return $.map(data, function(item){
+        return {
+          title: item.fields.title,
+          end: item.fields.end_time,
+          start: item.fields.start_time,
+          id: item.pk
+        };
+      });
+    }
+    function updateCalendar(date) {
+      var cacheKey = date.format('MM-YYYY');
+      var cacheItem = cache[cacheKey];
+      if (!cacheItem) {
+        cache[cacheKey] = [];
+        $.getJSON('json/', {
+          year: date.format('YYYY'),
+          month: date.format('MM')
+        }).done(function(fullCalendarData) {
+          var mapped = mapCalendarData(fullCalendarData);
+          cache[cacheKey] = mapped;
+          calendar.fullCalendar('addEventSource', mapped);
         });
       }
-      // calendar.fullCalendar('renderEvent', mappedCollection);
-      for (var y = 0; y < mappedCollection.length; y++) {
-        calendar.fullCalendar('renderEvent', mappedCollection[y]);
-      }
-    });
+    }
+
+    function initCalendar() {
+      var currentDate = moment();
+      var cacheKey = currentDate.format('MM-YYYY');
+      calendar.fullCalendar({
+        header: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'month,basicWeek,basicDay'
+        },
+        defaultDate: currentDate,
+        editable: true,
+        eventLimit: true,
+        eventClick: function(eventObj) {
+          document.location = window.location + eventObj._id;
+        },
+        viewRender: function(view) {
+          updateCalendar(view.intervalStart);
+        }
+      });
+      cache[cacheKey] = mapCalendarData(window.TODAY_DATA);
+      calendar.fullCalendar('addEventSource', cache[cacheKey]);
+    }
+    initCalendar();
   });
 })(document, window, jQuery, moment);
