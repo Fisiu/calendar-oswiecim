@@ -110,7 +110,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SPATIALITE_LIBRARY_PATH = os.environ.get(
     "SPATIALITE_LIBRARY_PATH",
-    '/usr/local/lib/mod_spatialite.dylib'
+    '/usr/lib64/mod_spatialite.so.7'
 )
 
 CKEDITOR_CONFIGS = {
