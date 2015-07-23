@@ -4,7 +4,6 @@
 
 .form-signin {
     padding: 5px;
-    margin: 0 auto;
 }
 
 .map {
@@ -15,8 +14,4 @@
 .event-time {
     font-size: 20px;
     text-align: center;
-}
-
-.poster img {
-    width: 100%;
 }
