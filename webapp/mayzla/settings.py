@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import dj_database_url
 from django.contrib import messages
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,7 +43,8 @@ INSTALLED_APPS = (
     'calendars',
     'sorl.thumbnail',
     'ckeditor',
-    'widget_tweaks'
+    'widget_tweaks',
+    'datetimewidget',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -69,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'calendars.context_processors.can_add_new_event',
             ],
         },
     },
@@ -79,13 +82,7 @@ WSGI_APPLICATION = 'mayzla.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
+DATABASES = {'default': dj_database_url.config(default='postgis://cal:cal@localhost/cal')}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -109,11 +106,6 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-SPATIALITE_LIBRARY_PATH = os.environ.get(
-    "SPATIALITE_LIBRARY_PATH",
-    '/usr/lib64/mod_spatialite.so.7'
-)
 
 CKEDITOR_CONFIGS = {
     'default': {
