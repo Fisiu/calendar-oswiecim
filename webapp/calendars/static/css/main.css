@@ -41,8 +41,18 @@ body {
     width: 100%;
 }
 
-.event-time {
-    font-size: 22px;
+.schedule .panel-heading {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.schedule-begin {
+    padding-right: 0;
+}
+.schedule-end {
+    padding-left: 0;
+}
+.schedule-end .panel {
+    border-left: 0;
 }
 
 .poster img {
@@ -53,20 +63,21 @@ body {
 }
 
 .label {
-    margin-right: 6px;
+    margin-left: 6px;
     border-radius: 7px;
 }
 
 .event-labels {
     text-align: right;
-    width: 60%;
+    white-space: nowrap; /* don't break line  */
     float: right;
 }
 
 .event-labels .label {
     border: 2px solid white;
     padding: 2px;
-    font-size: 6pt;
+    font-size: 7pt;
+    font-weight: 400;
 }
 
 .panel.disabled {
@@ -92,6 +103,41 @@ body {
 }
 
 /* Show cursor:pointer for events (when events are not editable) */
-a.fc-event {
+.fc-event, a.fc-event {
     cursor: pointer;
+    color: #555 !important;
+}
+.fc-event, a.fc-event :hover {
+    color: #333 !important;
+}
+
+/* Change background for fc-today */
+.fc-today {
+    background-color: rgba(39, 128, 227, 0.12) !important;
+}
+
+/* Don't user background and border for events in basic view */
+.fc-basic-view a.fc-event {
+    background: none;
+    border: none;
+}
+
+/* Don't highlight day in agendaDay view - only one day visible at the time */
+.fc-agendaDay-view .fc-today {
+    background: none !important;
+}
+.fc-agendaDay-view a.fc-event {
+    background-color: #a4c0e4;
+    border: 1px solid #1a6ecc;
+}
+.fc-agendaDay-view .fc-time-grid-event, .fc-agendaDay-view div.fc-time {
+    font-size: 10pt;
+}
+.fc-basic-view a.fc-event {
+    font-size: 10pt;
+}
+
+/* Hide events when not from current month/week */
+.fc-past a, .fc-future a {
+    display: none !important;
 }
