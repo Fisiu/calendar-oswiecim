@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load bootstrap3 %}
+{% load staticfiles %}
 
 {% block content %}
     <div class="row">
@@ -20,4 +21,8 @@
 
 {% block media %}
 {{ form.media }}
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
 {% endblock %}
