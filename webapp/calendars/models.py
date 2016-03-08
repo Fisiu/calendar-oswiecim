@@ -11,7 +11,7 @@ class Event(models.Model):
     description = RichTextField(verbose_name="Opis wydarzenia")
     image = models.ImageField(upload_to='event/%Y/%m/%d/', blank=True, null=True, verbose_name="Plakat")
     place = models.CharField(max_length=120, verbose_name="Miejsce")
-    #point = models.PointField(blank=True, null=True, verbose_name="Miejsce na mapie")
+    kind = models.ForeignKey('Kind', blank=True, null=True, related_name='events', verbose_name="Rodzaj wydarzenia")
     orgs = models.ManyToManyField('Organizer', blank=True, related_name='events', verbose_name="Organizator")
     user = models.ForeignKey(User, blank=True, null=True, related_name='event', verbose_name='Użytkownik')
     categories = models.ManyToManyField('Category', blank=True, verbose_name="Kategoria")
@@ -49,6 +49,13 @@ class Organizer(models.Model):
     logo = models.ImageField(upload_to='logo/%m/', blank=True, null=True, verbose_name="Logo")
     user = models.ManyToManyField(User, blank=True, related_name='organizer', verbose_name="Użytkownik")
     url = models.URLField(blank=True, null=True, verbose_name="Adres www")
+
+    def __str__(self):
+        return self.name
+
+
+class Kind(models.Model):
+    name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name

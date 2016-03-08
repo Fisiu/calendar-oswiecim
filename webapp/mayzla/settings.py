@@ -119,7 +119,7 @@ CKEDITOR_CONFIGS = {
             ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
             ['Link', 'Unlink'],
             ['RemoveFormat', 'Source']
-        ]    },
+        ]},
 }
 CKEDITOR_IMAGE_BACKEND = 'pillow'
 CKEDITOR_UPLOAD_PATH = 'uploadfiles'
@@ -127,7 +127,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
-THUMBNAIL_PRESERVE_FORMAT=True
+THUMBNAIL_PRESERVE_FORMAT = True
 
 # dbbackup settings
 # DON'T FORGET TO SET CORRECT BACKUP LOCATION

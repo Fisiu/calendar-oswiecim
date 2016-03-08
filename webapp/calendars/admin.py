@@ -2,13 +2,13 @@ from django.contrib import admin
 from easy_select2 import select2_modelform
 
 # Register your models here.
-from .models import Event, Organizer, Category
+from .models import Event, Organizer, Category, Kind
 
 
 class EventAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'user', 'start_time', 'end_time')
     search_fields = ['title', 'description']
-    fields = ('title', 'place', 'location', 'description', 'categories',
+    fields = ('title', 'place', 'location', 'description', 'categories', 'kind',
               'start_time', 'end_time', 'image', 'orgs', 'user', 'latitude',
               'longitude')
 
@@ -20,9 +20,11 @@ class EventAdmin(admin.ModelAdmin):
         }
         js = ('js/vendor/jquery.min.js',)
 
+
 class OrganizerAdmin(admin.ModelAdmin):
     form = select2_modelform(Organizer, attrs={'width': '400px'})
 
 admin.site.register(Event, EventAdmin)
 admin.site.register(Organizer, OrganizerAdmin)
 admin.site.register(Category)
+admin.site.register(Kind)

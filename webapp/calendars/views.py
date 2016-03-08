@@ -1,5 +1,3 @@
-import datetime
-
 from braces.views import LoginRequiredMixin
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -25,9 +23,10 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
-        future_events = Event.objects.filter(start_time__gte=datetime.datetime.now()).order_by('start_time')[:12]
-        past_events = Event.objects.filter(start_time__lt=datetime.datetime.now()).order_by('-start_time')[:12 - future_events.count()]
         dt_now = timezone.now()
+        events = Event.objects.filter(kind=None)
+        future_events = events.filter(start_time__gte=dt_now).order_by('start_time')[:12]
+        past_events = events.filter(start_time__lt=dt_now).order_by('-start_time')[:12 - future_events.count()]
         for event in past_events:
             event.is_old = event.end_time < dt_now
         context['events'] = list(chain(future_events, past_events))
@@ -43,7 +42,7 @@ class EventListView(ListView):
         context = super(EventListView, self).get_context_data(**kwargs)
         context['events_as_json'] = serializers.serialize(
             'json', self.object_list,
-            fields=('title', 'description', 'start_time', 'end_time'))
+            fields=('title', 'description', 'start_time', 'end_time', 'kind'))
         return context
 
 
@@ -168,7 +167,7 @@ def events_api(request):
         return HttpResponse(
             serializers.serialize(
                 'json', events,
-                fields=('title', 'description', 'start_time', 'end_time')),
+                fields=('title', 'description', 'start_time', 'end_time', 'kind')),
             content_type="application/json")
     else:
         return HttpResponse(status=400, content_type='text/html')
