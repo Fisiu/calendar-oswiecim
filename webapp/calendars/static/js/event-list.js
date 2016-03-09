@@ -28,7 +28,8 @@
         cache[cacheKey] = [];
         $.getJSON('json/', {
           year: date.format('YYYY'),
-          month: date.format('MM')
+          month: date.format('MM'),
+          kind: window.KIND
         }).done(function(fullCalendarData) {
           var mapped = mapCalendarData(fullCalendarData);
           cache[cacheKey] = mapped;

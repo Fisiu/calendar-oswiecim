@@ -24,9 +24,8 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         dt_now = timezone.now()
-        events = Event.objects.filter(kind=None)
-        future_events = events.filter(start_time__gte=dt_now).order_by('start_time')[:12]
-        past_events = events.filter(start_time__lt=dt_now).order_by('-start_time')[:12 - future_events.count()]
+        future_events = Event.objects.filter(start_time__gte=dt_now).order_by('start_time')[:12]
+        past_events = Event.objects.filter(start_time__lt=dt_now).order_by('-start_time')[:12 - future_events.count()]
         for event in past_events:
             event.is_old = event.end_time < dt_now
         context['events'] = list(chain(future_events, past_events))
@@ -40,9 +39,7 @@ class EventListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(EventListView, self).get_context_data(**kwargs)
-        context['events_as_json'] = serializers.serialize(
-            'json', self.object_list,
-            fields=('title', 'description', 'start_time', 'end_time', 'kind'))
+        context['kind'] = self.request.GET.get('rodzaj', '')
         return context
 
 
@@ -159,9 +156,13 @@ def logout_view(request):
 def events_api(request):
     month = request.GET.get('month', None)
     year = request.GET.get('year', None)
+    kind = request.GET.get('kind', None)
 
     if year and month:
-        events = Event.objects.filter(
+        events = Event.objects.all()
+        if kind is not None:
+            events = events.filter(kind_id=kind)
+        events = events.filter(
             Q(start_time__year=year, start_time__month=month) |
             Q(start_time__year=year, start_time__month=month))
         return HttpResponse(

@@ -28,7 +28,7 @@ mógł promować i docierać z informacją do szerokiego grona odbiorców." />
 
 {% block extra_js %}
     <script type="text/javascript">
-      window.TODAY_DATA = {{ events_as_json | safe}};
+      window.KIND = "{{ kind }}"
     </script>
     <script type="text/javascript" src="{% static 'js/vendor/moment.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/vendor/fullcalendar/fullcalendar.min.js' %}"></script>
